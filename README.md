@@ -1,1 +1,1 @@
-Cheapsharl API link: https://apidocs.cheapshark.com 
+Cheapsharl API link: https://apidocs.cheapshark.com
