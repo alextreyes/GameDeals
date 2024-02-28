@@ -1,0 +1,19 @@
+{% extends 'base.html'%} {% block title %} gamedeals {% endblock %} {% block
+content %}
+<header>
+  <h1>Welcome to GameDeals!</h1>
+</header>
+
+{% if g.user is none %}
+<div>
+  <p>Sign up now!</p>
+  <a href="/signup" class="btn btn-primary">Sign up</a>
+</div>
+<div>
+  <a href="/login" class="btn btn-primary">Login</a>
+</div>
+{% endif %} {% if g.user is not none %}
+<div>
+  <a href="/logout" class="btn btn-primary">Logout!</a>
+</div>
+{% endif %} {% endblock %}

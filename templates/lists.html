@@ -1,0 +1,28 @@
+{% extends 'base.html' %} {% block content %}
+<div class="col-lg-6 col-md-8 col-sm-12">
+  <ul class="list-group" id="lists">
+    {% for list in all_lists %}
+    <li class="list-group-item">
+      {% if list.user and list.user.profile_pic %}
+      <img src="{{ list.user.profile_pic }}" alt="" />
+      {% endif %} {% if g.user %}
+      <p>{{ g.user.username }}</p>
+      {% endif %}
+      <div class="lists-area">
+        <p>{{ list.list_name }}</p>
+      </div>
+      {% if g.user %}
+      <form method="POST" action="/lists/add_like/{{ list.id }}" id="list-form">
+        <button>
+          {% if list.id in liked_list %}
+          <i>x</i> Unlike {% else %} <i class="fa fa-thumbs-up"></i> Like {%
+          endif %}
+        </button>
+      </form>
+
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

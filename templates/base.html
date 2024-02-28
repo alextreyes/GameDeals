@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}{% endblock %}</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/bootstrap/dist/css/bootstrap.css"
+    />
+    <script src="https://unpkg.com/jquery"></script>
+    <script src="https://unpkg.com/popper"></script>
+    <script src="https://unpkg.com/bootstrap"></script>
+
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+    />
+    <link rel="stylesheet" href="/static/stylesheets/style.css" />
+    <link rel="shortcut icon" href="/static/favicon.ico" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+  </head>
+  <body>
+    {% block contentTitle %} {% endblock%}
+    <header>
+      <nav>
+        <ul>
+          <li><a href="/Bdeals">Best Deals</a></li>
+          <li><a href="/Bgames">Best Games</a></li>
+          <li><a href="/lists">Best Lists</a></li>
+        </ul>
+      </nav>
+    </header>
+    {% block content %} {% endblock%}
+  </body>
+</html>

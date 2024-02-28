@@ -1,0 +1,24 @@
+{% extends 'base.html' %} {% block title %} Best Deals {% endblock %} {% block
+contentTitle %}
+<h1>Games</h1>
+{% endblock%} {% block content %}
+
+<div class="grid-container">
+  <ul>
+    {% for deal in deals %}
+    <li>
+      <a
+        href="https://www.cheapshark.com/redirect?dealID={{ deal.dealID }}"
+        target="_blank"
+      >
+        <div class="grid-item">
+          <img src="{{ deal.thumb }}" alt="{{ deal.title }}" />
+          {{ deal.title }} - Metacritic score {{ deal.metacriticScore}} - Deal
+          Rating {{ deal.dealRating }} - Price: {{ deal.salePrice }}
+        </div>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}
