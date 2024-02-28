@@ -99,14 +99,6 @@ def login():
 
     return render_template('users/login.html', form=form)
 
-
-
-
-
-
-
-
-
 @app.route("/")
 def render_home():
     """Renders homepage."""
@@ -145,7 +137,7 @@ def render_Bgames():
         data = response.json()
         # Pass the data to the template
         print(url)
-        return render_template('Bgames.html', deals=data,)
+        return render_template('Bgames.html', deals=data, url=url, user=g.user)
     else:
         return "Failed to fetch data from API"
     
@@ -167,22 +159,84 @@ def show_lists():
             for likes in user.likes:
                 liked_list.append(likes.list_id)
             
-            # Pass user's lists and liked list IDs to the template
             return render_template('lists.html', liked_list=liked_list, all_lists=all_lists)
         else:
             liked_list = []
         
-        # If user has no lists or if g.user.lists is None
         return render_template('lists.html', liked_list=liked_list, all_lists=all_lists)
     else:
         # If user is not logged in, render home.html
-        return render_template('home.html')
-
+        # going to be rendering to another page in the future needs to be done 
+        return render_template('home.html') 
     
+@app.route("/lists/new", methods = ["GET", "POST"])
+def show_create_list():
+    """shows and creates a new list"""
+
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+
+    form = ListForm()
+
+    if form.validate_on_submit():
+        list = UserList(list_name=form.list_name.data, user_id=g.user.id)
+        g.user.lists.append(list)
+        db.session.commit()
+
+        return redirect("/lists")
+
+    return render_template('list_new.html', form=form)
+# need to add this to delete lists
+# @app.route("/lists/<int:list_id>delete", methods=["POST"])
+# def delete_list():
+
+
+@app.route("/lists/<int:list_id>", methods=["GET"])
+def show_list(list_id):
+    """shows specific list with games"""
+    # Fetch the list object by its ID
+    user_list = UserList.query.filter_by(id=list_id).first()
+
+    # Check if the list exists
+    if user_list:
+        # Assuming you have a relationship between UserList and games, you can access the associated games like this:
+        games = user_list.games
+        return render_template("gameList.html", list=user_list, games=games)
+    else:
+        # Handle the case where the list with the given ID doesn't exist
+        flash("List not found", "error")
+        return redirect('/lists') 
+
+@app.route('/lists/<int:list_id>/add_game', methods=['POST'])
+def add_game_to_list(list_id):
+    game_id = request.form.get('game_id')
+    print(game_id)
+
+    # Check if the game already exists in the user's list
+    existing_game = UserListGame.query.filter_by(list_id=list_id, game_id=game_id).first()
+    if existing_game:
+        # Game already exists in the list, handle accordingly
+        flash("Game already exists in the list")
+        return redirect(f'/lists/{list_id}')
+
+    # If the game doesn't exist, add it to the list
+    name = request.form.get('title')
+    thumbnail = request.form.get('thumbnail')
+    webpage = request.form.get('deal_webpage')
+
+    new_game = UserListGame(list_id=list_id, game_id=game_id, name=name, thumbnail=thumbnail, webpage=webpage)
+    db.session.add(new_game)
+    db.session.commit()
+
+    flash("Game added to list successfully")
+    return redirect(f'/lists/{list_id}')
+
 
 
 @app.route('/lists/add_like/<int:list_id>', methods=["POST"])
 def add_like(list_id):
+    """interact with likes"""
     #  user is logged in
     print(list_id)
     user = g.user

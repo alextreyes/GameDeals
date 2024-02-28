@@ -1,0 +1,16 @@
+{% extends 'base.html' %} {% block title %} {{ list.list_name }} {% endblock %}
+{% block contentTitle %} {% endblock%} {% block content %}
+<h1>{{ list.list_name }}</h1>
+
+<ul>
+  {% for game in list.games %}
+  <li>
+    <div class="grid-item">
+      <img src="{{ game.thumbnail }}" alt="{{ game.name }}" />
+      {{ game.name }} - {{ game.thumbnail }} - {{ game.webpage }}
+    </div>
+  </li>
+  {% endfor %}
+</ul>
+
+{% endblock %}

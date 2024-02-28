@@ -20,6 +20,8 @@ class User(db.Model):
         db.Text,
         default="/static/images/default-pic.png",
     )
+    def __repr__(self):
+        return '<User {}>'.format(self.username)
 
     @classmethod
     def signup(cls, username, password, profile_pic="/static/images/default-pic.png"):
@@ -70,18 +72,22 @@ class UserList(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     list_name = db.Column(db.String(255), nullable=False)
     user = db.relationship('User', backref=db.backref('lists', cascade='all,delete'))
+    games = db.relationship('UserListGame', backref='list', cascade='all,delete')
 
     def __repr__(self):
         return '<UserList {}>'.format(self.list_name)
-    
+
 class UserListGame(db.Model):
     __tablename__ = 'user_list_games'
     list_id = db.Column(db.Integer, db.ForeignKey('user_lists.id'), primary_key=True)
     game_id = db.Column(db.Integer, primary_key=True)
-    user_list = db.relationship('UserList', backref=db.backref('games', cascade='all,delete'))
+    name = db.Column(db.String(128))  
+    thumbnail = db.Column(db.String(256))  
+    webpage = db.Column(db.String(512)) 
 
     def __repr__(self):
-        return '<UserListGame(list_id={}, game_id={})>'.format(self.list_id, self.game_id)
+        return '<UserListGame(list_id={}, game_id={}, name={}, thumbnail={}, webpage={})>'.format(
+            self.list_id, self.game_id, self.name, self.thumbnail, self.webpage)
     
 class Like(db.Model):
     __tablename__ = 'likes'

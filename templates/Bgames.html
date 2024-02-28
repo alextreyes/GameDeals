@@ -1,24 +1,38 @@
-{% extends 'base.html' %} {% block title %} Best Deals {% endblock %} {% block
+{% extends 'base.html' %} {% block title %} Best Games {% endblock %} {% block
 contentTitle %}
 <h1>Games</h1>
 {% endblock%} {% block content %}
 
 <div class="grid-container">
-  <ul>
-    {% for deal in deals %}
-    <li>
-      <a
-        href="https://www.cheapshark.com/redirect?dealID={{ deal.dealID }}"
-        target="_blank"
-      >
-        <div class="grid-item">
-          <img src="{{ deal.thumb }}" alt="{{ deal.title }}" />
-          {{ deal.title }} - Metacritic score {{ deal.metacriticScore}} - Deal
-          Rating {{ deal.dealRating }} - Price: {{ deal.salePrice }}
-        </div>
-      </a>
-    </li>
-    {% endfor %}
-  </ul>
+  {% for deal in deals %}
+  <form method="POST" action="/lists/1/add_game">
+    <ul>
+      <li>
+        <input type="hidden" name="title" value="{{ deal.title }}" />
+        <input type="hidden" name="thumbnail" value="{{ deal.thumb }}" />
+        <input type="hidden" name="game_id" value="{{ deal.steamAppID }}" />
+        <input
+          type="hidden"
+          name="deal_webpage"
+          value="https://www.cheapshark.com/redirect?dealID={{ deal.dealID }}"
+        />
+        <a
+          href="https://www.cheapshark.com/redirect?dealID={{ deal.dealID }}"
+          target="_blank"
+        >
+          <div class="grid-item">
+            <img src="{{ deal.thumb }}" alt="{{ deal.title }}" />
+            {{ deal.title }} - Metacritic score {{ deal.metacriticScore}} - Deal
+            Rating {{ deal.dealRating }} - Price: {{ deal.salePrice }}
+          </div>
+        </a>
+        <button type="submit">Add to List</button>
+      </li>
+    </ul>
+  </form>
+  {% endfor %}
 </div>
+<!-- <div>
+  <form action=""></form>
+</div> -->
 {% endblock %}

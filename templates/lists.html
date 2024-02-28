@@ -9,7 +9,7 @@
       <p>{{ g.user.username }}</p>
       {% endif %}
       <div class="lists-area">
-        <p>{{ list.list_name }}</p>
+        <a href="/lists/{{ list.id }}">{{ list.list_name }}</a>
       </div>
       {% if g.user %}
       <form method="POST" action="/lists/add_like/{{ list.id }}" id="list-form">
@@ -24,5 +24,10 @@
     </li>
     {% endfor %}
   </ul>
+</div>
+<div>
+  <form method="GET" action="/lists/new">
+    <button class="btn btn-outline-success btn-block">Create list</button>
+  </form>
 </div>
 {% endblock %}
