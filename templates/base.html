@@ -31,9 +31,21 @@
           <li><a href="/Bdeals">Best Deals</a></li>
           <li><a href="/Bgames">Best Games</a></li>
           <li><a href="/lists">Best Lists</a></li>
+          {% if user %}
+          <li><a href="/users/{{ user.id }}">My lists</a></li>
+          {% endif %}
+          <li><a href="/lists/new">Create a List!</a></li>
+          <li><a href="/">Home</a></li>
         </ul>
       </nav>
     </header>
-    {% block content %} {% endblock%}
+    {% with messages = get_flashed_messages() %} {% if messages %}
+    <ul class="flash-messages">
+      {% for message in messages %}
+      <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %} {% endwith %} {% block content %} {% endblock%}
+    <script src="{{ url_for('static', filename='niceScript.js') }}"></script>
   </body>
 </html>

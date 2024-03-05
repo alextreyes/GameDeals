@@ -83,7 +83,9 @@ class UserListGame(db.Model):
     game_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128))  
     thumbnail = db.Column(db.String(256))  
-    webpage = db.Column(db.String(512)) 
+    webpage = db.Column(db.String(512))
+    metacritic = db.Column(db.String(512)) 
+    rating = db.Column(db.String(512))
 
     def __repr__(self):
         return '<UserListGame(list_id={}, game_id={}, name={}, thumbnail={}, webpage={})>'.format(

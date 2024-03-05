@@ -5,10 +5,14 @@
 <ul>
   {% for game in list.games %}
   <li>
-    <div class="grid-item">
-      <img src="{{ game.thumbnail }}" alt="{{ game.name }}" />
-      {{ game.name }} - {{ game.thumbnail }} - {{ game.webpage }}
-    </div>
+    <form method="POST" action="/lists/{{ list.id }}/remove_game">
+      <input type="hidden" name="game_id" value="{{ game.game_id }}" />
+      <div class="clickable" onclick="redirectToPage('{{ game.webpage }}')">
+        <img src="{{ game.thumbnail }}" alt="{{ game.name }}" />
+        {{ game.name }} - {{ game.metacritic}} - {{ game.rating }}
+      </div>
+      <button type="submit">remove from List</button>
+    </form>
   </li>
   {% endfor %}
 </ul>

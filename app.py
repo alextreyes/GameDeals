@@ -1,6 +1,6 @@
 """GameDeals application."""
 
-from flask import Flask, request, render_template,  redirect, flash, session, g, url_for
+from flask import Flask, request, render_template,  redirect, flash, session, g, url_for,jsonify, abort
 import requests
 from models import db,  connect_db, User, UserList, UserListGame, Like
 from forms import UserForm, LoginForm, ListForm
@@ -31,7 +31,6 @@ def add_user_to_g():
 
     else:
         g.user = None
-    print(g.user)
 
 def do_login(user):
     """Log in user."""
@@ -44,6 +43,14 @@ def do_logout():
 
     if CURR_USER_KEY in session:
         del session[CURR_USER_KEY]
+
+@app.route('/check-authentication', methods=['GET'])
+def check_authentication():
+    if CURR_USER_KEY in session:
+        return jsonify({'isLoggedIn': True})
+    else:
+        return jsonify({'isLoggedIn': False})
+
 
 @app.route('/signup', methods=["GET", "POST"])
 def signup():
@@ -99,10 +106,19 @@ def login():
 
     return render_template('users/login.html', form=form)
 
-@app.route("/")
+@app.route("/", methods=["GET"])
 def render_home():
     """Renders homepage."""
-    return render_template("home.html")
+
+    if CURR_USER_KEY in session:
+        g.user = User.query.get(session[CURR_USER_KEY])
+
+    else:
+        g.user = None
+
+    return render_template("home.html", user=g.user)
+
+
 
 @app.route("/Bdeals")
 def render_Bdeals():
@@ -118,7 +134,7 @@ def render_Bdeals():
         data = response.json()
         # Pass the data to the template
         print(url)
-        return render_template('Bdeals.html', deals=data,)
+        return render_template('Bdeals.html', deals=data, user=g.user)
     else:
         return "Failed to fetch data from API"
     
@@ -129,14 +145,13 @@ def render_Bgames():
     params = {
         "storeID": "1",
         "sortBy":"Metacritic",
-        "pageSize":"6",
+        "pageSize":"12",
         "onSale": "1"
     }
     response = requests.get(url, params=params)
     if response.status_code == 200:
         data = response.json()
-        # Pass the data to the template
-        print(url)
+        # Pass the data and user to the template
         return render_template('Bgames.html', deals=data, url=url, user=g.user)
     else:
         return "Failed to fetch data from API"
@@ -151,22 +166,17 @@ def show_lists():
         user = g.user
         
         all_lists = UserList.query.all()
-        # Make sure g.user.lists contains the user's lists
         print(all_lists)
         if all_lists:
-            # Extract list IDs that the user has liked
             liked_list = []
             for likes in user.likes:
                 liked_list.append(likes.list_id)
             
-            return render_template('lists.html', liked_list=liked_list, all_lists=all_lists)
-        else:
-            liked_list = []
+            return render_template('lists.html', liked_list=liked_list, all_lists=all_lists, user=user)
         
         return render_template('lists.html', liked_list=liked_list, all_lists=all_lists)
     else:
-        # If user is not logged in, render home.html
-        # going to be rendering to another page in the future needs to be done 
+        flash("Log in or Sign up to access best lists!")
         return render_template('home.html') 
     
 @app.route("/lists/new", methods = ["GET", "POST"])
@@ -187,9 +197,24 @@ def show_create_list():
         return redirect("/lists")
 
     return render_template('list_new.html', form=form)
-# need to add this to delete lists
-# @app.route("/lists/<int:list_id>delete", methods=["POST"])
-# def delete_list():
+
+@app.route("/lists/<int:list_id>/delete", methods=["POST"])
+def delete_list(list_id):
+    """Deletes list."""
+    # Retrieve the list from the database
+    list_to_delete = UserList.query.get(list_id)
+    
+    # Check if the list exists
+    if not list_to_delete:
+        abort(404, "List not found")
+
+    # Delete the list
+    db.session.delete(list_to_delete)
+    db.session.commit()
+
+    flash("List deleted successfully")
+    # Redirect the user back to the user page
+    return redirect(url_for('render_user_page', user_id=list_to_delete.user_id))
 
 
 @app.route("/lists/<int:list_id>", methods=["GET"])
@@ -208,10 +233,10 @@ def show_list(list_id):
         flash("List not found", "error")
         return redirect('/lists') 
 
-@app.route('/lists/<int:list_id>/add_game', methods=['POST'])
-def add_game_to_list(list_id):
+@app.route('/lists/add_game', methods=['POST'])
+def add_game_to_list():
     game_id = request.form.get('game_id')
-    print(game_id)
+    list_id = request.form.get('list_id')
 
     # Check if the game already exists in the user's list
     existing_game = UserListGame.query.filter_by(list_id=list_id, game_id=game_id).first()
@@ -224,13 +249,47 @@ def add_game_to_list(list_id):
     name = request.form.get('title')
     thumbnail = request.form.get('thumbnail')
     webpage = request.form.get('deal_webpage')
+    metacritic = request.form.get('metacritic')
+    rating = request.form.get('rating')
 
-    new_game = UserListGame(list_id=list_id, game_id=game_id, name=name, thumbnail=thumbnail, webpage=webpage)
+    new_game = UserListGame(list_id=list_id, game_id=game_id, name=name, thumbnail=thumbnail, webpage=webpage, rating=rating, metacritic=metacritic )
     db.session.add(new_game)
     db.session.commit()
 
     flash("Game added to list successfully")
     return redirect(f'/lists/{list_id}')
+
+@app.route('/lists/<int:list_id>/remove_game', methods =['POST'])
+def remove_game_from_list(list_id):
+    """Removes game from list"""
+    user = g.user
+    if not user:
+        # will need to make this better, to redirect to an error page or another page with an error 
+        return redirect('/')
+    
+    list_to_modify = UserList.query.get(list_id)
+
+    if not list_to_modify:
+        # Handle the case where the list doesn't exist
+        return "List not found", 404  # Return a 404 status code    
+
+    game_id = request.form.get('game_id')
+    game_to_remove = UserListGame.query.filter_by(list_id=list_id, game_id=game_id).first()
+
+    if not game_to_remove:
+        # Handle the case where the game is not in the list
+        return "Game not found in the list", 404  # Return a 404 status code
+
+    # Remove the game from the list
+    db.session.delete(game_to_remove)
+    db.session.commit()    
+
+    # liked_game_list = []
+    # for liked_games in user.lists[list_id]:
+    #     liked_game_list.append(liked_games.game_id)
+    # print(liked_game_list)
+    return redirect(f'/lists/{list_id}')
+    
 
 
 
@@ -261,3 +320,16 @@ def add_like(list_id):
         db.session.add(user_liked)
         db.session.commit()
         return redirect('/lists')
+
+@app.route("/users/<int:user_id>", methods=["GET"])
+def render_user_page(user_id):
+    """Renders user page"""
+    user = User.query.get(user_id)  
+    if user is None:
+        # Handle the case where the user does not exist
+        return "User not found", 404
+
+    # Retrieve all lists associated with the user
+    all_lists = UserList.query.filter_by(user_id=user_id).all()
+
+    return render_template("/users/user_page.html", user=user, all_lists=all_lists)

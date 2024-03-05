@@ -1,0 +1,27 @@
+{% extends 'base.html' %} {% block title %} My lists {% endblock %} {% block
+contentTitle %} {% endblock%} {% block content %}
+
+<div class="col-lg-6 col-md-8 col-sm-12">
+  <ul class="list-group" id="lists">
+    {% for list in all_lists %}
+    <li class="list-group-item">
+      <img src="{{ list.user.profile_pic }}" alt="" />
+
+      <p>{{ g.user.username }}</p>
+
+      <div class="lists-area">
+        <a href="/lists/{{ list.id }}">{{ list.list_name }}</a>
+      </div>
+      <form method="POST" action="/lists/{{ list.id }}/delete">
+        <button>delete {{list.id}} {{list.id}}</button>
+      </form>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+<div>
+  <form method="GET" action="/lists/new">
+    <button class="btn btn-outline-success btn-block">Create list</button>
+  </form>
+</div>
+{% endblock %}

@@ -5,34 +5,75 @@ contentTitle %}
 
 <div class="grid-container">
   {% for deal in deals %}
-  <form method="POST" action="/lists/1/add_game">
-    <ul>
-      <li>
-        <input type="hidden" name="title" value="{{ deal.title }}" />
-        <input type="hidden" name="thumbnail" value="{{ deal.thumb }}" />
-        <input type="hidden" name="game_id" value="{{ deal.steamAppID }}" />
-        <input
-          type="hidden"
-          name="deal_webpage"
-          value="https://www.cheapshark.com/redirect?dealID={{ deal.dealID }}"
-        />
-        <a
-          href="https://www.cheapshark.com/redirect?dealID={{ deal.dealID }}"
-          target="_blank"
-        >
-          <div class="grid-item">
-            <img src="{{ deal.thumb }}" alt="{{ deal.title }}" />
-            {{ deal.title }} - Metacritic score {{ deal.metacriticScore}} - Deal
-            Rating {{ deal.dealRating }} - Price: {{ deal.salePrice }}
+  <div>
+    <form method="POST" action="/lists/add_game">
+      <ul>
+        <li>
+          <input type="hidden" name="title" value="{{ deal.title }}" />
+          <input type="hidden" name="thumbnail" value="{{ deal.thumb }}" />
+          <input type="hidden" name="game_id" value="{{ deal.steamAppID }}" />
+          <input
+            type="hidden"
+            name="metacritic"
+            value="{{ deal.metacriticScore }}"
+          />
+          <input
+            type="hidden"
+            name="rating"
+            value="{{ deal.steamRatingText }}"
+          />
+          <input
+            type="hidden"
+            name="deal_webpage"
+            value="https://www.cheapshark.com/redirect?dealID={{ deal.dealID }}"
+          />
+          <a
+            href="https://www.cheapshark.com/redirect?dealID={{ deal.dealID }}"
+            target="_blank"
+          >
+            <div class="grid-item">
+              <img src="{{ deal.thumb }}" alt="{{ deal.title }}" />
+              {{ deal.title }} - Metacritic score {{ deal.metacriticScore}} -
+              Deal Rating {{ deal.dealRating }} - Price: {{ deal.salePrice }}
+            </div>
+          </a>
+          {% if user %}
+          <button
+            class="add-to-list-btn"
+            data-deal-id="{{ deal.title }}"
+            type="button"
+          >
+            Add to List
+          </button>
+          <div
+            class="list-dropdown"
+            id="dropdown-{{ deal.title }}"
+            style="display: none"
+          >
+            <select name="list_id">
+              {% for user_list in user.lists %}
+              <option value="{{ user_list.id }}">
+                {{ user_list.list_name }}
+              </option>
+              {% endfor %}
+            </select>
+            <button type="submit">Confirm</button>
           </div>
-        </a>
-        <button type="submit">Add to List</button>
-      </li>
-    </ul>
-  </form>
-  {% endfor %}
+
+          {% endif %}
+        </li>
+      </ul>
+    </form>
+    {% if user is none %}
+    <form method="GET" action="/signup">
+      <button>Login or Sign Up</button>
+    </form>
+    {% endif %} {% if user and not user.lists %}
+    <form method="GET" action="/lists/new">
+      <button>Create list to add!</button>
+    </form>
+  </div>
+  {% endif %} {% endfor %}
 </div>
-<!-- <div>
-  <form action=""></form>
-</div> -->
+
 {% endblock %}

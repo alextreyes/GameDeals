@@ -19,6 +19,8 @@ CREATE TABLE user_list_games (
     name VARCHAR(128),
     thumbnail VARCHAR(256),
     webpage VARCHAR(512),
+    metacritic VARCHAR(128),
+    rating VARCHAR(128),
     PRIMARY KEY (list_id, game_id),
     CONSTRAINT fk_user_list_games_list_id FOREIGN KEY (list_id) REFERENCES user_lists(id) ON DELETE CASCADE
 );
