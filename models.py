@@ -73,6 +73,14 @@ class UserList(db.Model):
     list_name = db.Column(db.String(255), nullable=False)
     user = db.relationship('User', backref=db.backref('lists', cascade='all,delete'))
     games = db.relationship('UserListGame', backref='list', cascade='all,delete')
+    likes = db.relationship('Likes', backref=db.backref('lists', cascade='all,delete'))
+    
+    def count_likes(self):
+        return Likes.query.filter_by(list_id=self.id).count()
+    def count_games(self):
+        """Count the number of games in this list."""
+        return len(self.games)  
+
 
     def __repr__(self):
         return '<UserList {}>'.format(self.list_name)
@@ -91,7 +99,7 @@ class UserListGame(db.Model):
         return '<UserListGame(list_id={}, game_id={}, name={}, thumbnail={}, webpage={})>'.format(
             self.list_id, self.game_id, self.name, self.thumbnail, self.webpage)
     
-class Like(db.Model):
+class Likes(db.Model):
     __tablename__ = 'likes'
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)

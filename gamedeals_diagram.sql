@@ -1,5 +1,4 @@
-﻿
-CREATE TABLE users (
+﻿CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
@@ -10,7 +9,7 @@ CREATE TABLE user_lists (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL,
     list_name VARCHAR(255) NOT NULL,
-    CONSTRAINT fk_user_lists_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE user_list_games (
@@ -19,21 +18,16 @@ CREATE TABLE user_list_games (
     name VARCHAR(128),
     thumbnail VARCHAR(256),
     webpage VARCHAR(512),
-    metacritic VARCHAR(128),
-    rating VARCHAR(128),
+    metacritic VARCHAR(512),
+    rating VARCHAR(512),
     PRIMARY KEY (list_id, game_id),
-    CONSTRAINT fk_user_list_games_list_id FOREIGN KEY (list_id) REFERENCES user_lists(id) ON DELETE CASCADE
+    FOREIGN KEY (list_id) REFERENCES user_lists(id) ON DELETE CASCADE
 );
 
 CREATE TABLE likes (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL,
     list_id INTEGER NOT NULL,
-    CONSTRAINT fk_likes_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    CONSTRAINT fk_likes_list_id FOREIGN KEY (list_id) REFERENCES user_lists(id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (list_id) REFERENCES user_lists(id) ON DELETE CASCADE
 );
-
-CREATE INDEX idx_users_username ON users (username);
-CREATE INDEX idx_user_lists_user_id ON user_lists (user_id);
-
-

@@ -1,0 +1,110 @@
+.flex-container {
+  display: flex;
+  flex-wrap: wrap; /* Allow cards to wrap to the next row */
+  justify-content: center; /* Center the cards horizontally */
+  gap: 20px; /* Adjust the gap between cards */
+}
+
+.card {
+  width: 18rem; /* Set a fixed width for the cards */
+  /* Add other card styles */
+}
+
+h1 {
+  margin-bottom: 50px;
+  font-family: "Open Sans", sans-serif;
+  font-size: 36px;
+  font-weight: bold;
+  color: #cacaca;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  margin-top: 20px;
+}
+
+header {
+  text-align: center;
+}
+
+.user-log {
+  text-align: center;
+}
+
+.flash-messages {
+  list-style: none;
+  padding: 10px;
+  margin: 0;
+  border-radius: 5px;
+}
+
+.flash-messages li {
+  background-color: #dff0d8; /* Light green background */
+  color: #3c763d; /* Dark green text */
+  padding: 8px 15px;
+  margin-bottom: 5px;
+  border-radius: 3px;
+}
+
+.flash-messages li.error {
+  background-color: #f2dede; /* Light red background for error messages */
+  color: #a94442; /* Dark red text for error messages */
+}
+
+html,
+body {
+  background: linear-gradient(to bottom, #000000, #808080);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  /* Set body as flex container */
+  display: flex;
+  /* Center content horizontally and vertically */
+  justify-content: center;
+  align-items: center;
+  /* Set body height to occupy the entire viewport */
+  height: 100vh;
+  /* Remove default margin */
+  margin: 0;
+  flex-direction: column;
+}
+
+.user-log {
+  display: flex;
+  flex-wrap: wrap; /* Allow cards to wrap to the next row */
+  justify-content: center; /* Center the cards horizontally */
+  gap: 20px;
+  align-items: center;
+  margin-top: auto;
+  margin-bottom: 10px;
+}
+
+.games {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.navbar {
+  width: 100%;
+  padding: 10px;
+  position: fixed;
+  top: 0;
+  left: 0; /* Ensure the navbar appears above other content */
+}
+
+.navbar-nav .nav-link {
+  color: #ffffff; /* White text color */
+}
+
+.navbar-nav .nav-link:hover {
+  color: #e0e0e0; /* Light gray text color on hover */
+}
+
+label {
+  color: #ffffff;
+}
