@@ -1,43 +1,28 @@
 {% extends 'base.html' %} {% block title %} Best Deals {% endblock %} {% block
 contentTitle %}
-<h1>Deals</h1>
+<h1>The Best Game Deals</h1>
 {% endblock%}{% block content %}
 
-<div class="grid-container">
+<div class="games">
   {% for deal in deals %}
-  <div>
+  <div class="card text-center text-white bg-dark mb-3" style="width: 18rem">
     <form method="POST" action="/lists/add_game">
-      <ul>
-        <li>
-          <input type="hidden" name="title" value="{{ deal.title }}" />
-          <input type="hidden" name="thumbnail" value="{{ deal.thumb }}" />
-          <input type="hidden" name="game_id" value="{{ deal.steamAppID }}" />
-          <input
-            type="hidden"
-            name="metacritic"
-            value="{{ deal.metacriticScore }}"
-          />
-          <input
-            type="hidden"
-            name="rating"
-            value="{{ deal.steamRatingText }}"
-          />
-          <input
-            type="hidden"
-            name="deal_webpage"
-            value="https://www.cheapshark.com/redirect?dealID={{ deal.dealID }}"
-          />
-          <a
-            href="https://www.cheapshark.com/redirect?dealID={{ deal.dealID }}"
-            target="_blank"
-          >
-            <div class="grid-item">
-              <img src="{{ deal.thumb }}" alt="{{ deal.title }}" />
-              {{ deal.title }} - Deal Rating {{ deal.dealRating }} - Price: {{
-              deal.salePrice }}
-            </div>
-          </a>
-          {% if user.lists %}
+      <input type="hidden" name="title" value="{{ deal.title }}" />
+      <input type="hidden" name="thumbnail" value="{{ deal.thumb }}" />
+      <input type="hidden" name="game_id" value="{{ deal.steamAppID }}" />
+      <input type="hidden" name="metacritic" value="{{ deal.metacriticScore }}" />
+      <input type="hidden" name="rating" value="{{ deal.steamRatingText }}" />
+      <input type="hidden" name="deal_webpage" value="https://www.cheapshark.com/redirect?dealID={{ deal.dealID }}" />
+      <a href="https://www.cheapshark.com/redirect?dealID={{ deal.dealID }}" target="_blank">
+        <img class="card-img-top" src="{{ deal.thumb }}" alt="{{ deal.title }}" />
+      </a>
+      <div class="card-body">
+        <h5 class="card-title">{{ deal.title }}</h5>
+        <p class="card-text">
+          Deal Rating {{ deal.dealRating }}
+          Price: {{ deal.salePrice }}
+        </p>
+        {% if user.lists %}
           <button
             class="add-to-list-btn"
             data-deal-id="{{ deal.title }}"
@@ -60,19 +45,29 @@ contentTitle %}
             <button type="submit">Confirm</button>
           </div>
           {% endif %}
-        </li>
-      </ul>
+      </div>
+
     </form>
     {% if user is none %}
-    <form method="GET" action="/signup">
-      <button>Login or Sign Up</button>
-    </form>
-    {% endif %} {% if user and not user.lists %}
-    <form method="GET" action="/lists/new">
-      <button>Create list to add!</button>
-    </form>
+    <div class="user-log" >
+      <form method="GET" action="/signup">
+        <button class="btn btn-primary">Sign Up</button>
+      </form>
+      <span>or</span>
+      <form method="GET" action="/login">
+        <button class="btn btn-primary">login</button>
+        <span>To add!</span>
+      </form>
+    </div>
+    {% elif user and not user.lists %}
+    <div class="user-log" >
+      <form method="GET" action="/lists/new">
+        <button class="btn btn-primary">Create list to add!</button>
+      </form>
+    </div>
+      {% endif %}
   </div>
-  {% endif %} {% endfor %}
+  {% endfor %}
 </div>
 
 {% endblock %}

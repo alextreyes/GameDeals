@@ -1,18 +1,17 @@
 {% extends 'base.html' %} {% block content %}
 
-<div class="row justify-content-md-center">
-  <div class="col-md-7 col-lg-5">
-    <h2 class="join-message">Join GameDeals!.</h2>
+    <h1 class="join-message">Join GameDeals!</h1>
     <form method="POST" id="user_form">
-      {{ form.hidden_tag() }} {% for field in form if field.widget.input_type !=
-      'hidden' %} {% for error in field.errors %}
-      <span class="text-danger">{{ error }}</span>
-      {% endfor %} {{ field(placeholder=field.label.text, class="form-control")
-      }} {% endfor %}
-
-      <button class="btn btn-primary btn-lg btn-block">Sign up!</button>
+      {{ form.hidden_tag() }}
+      {% for field in form if field.widget.input_type != 'hidden' %}
+        <div class="form-group">
+          <label for="{{ field.id }}">{{ field.label.text }}</label>
+          {{ field(class="form-control", placeholder=field.label.text) }}
+          {% for error in field.errors %}
+            <span class="text-danger">{{ error }}</span>
+          {% endfor %}
+        </div>
+      {% endfor %}
+      <button type="submit" class="btn btn-primary btn-lg btn-block">Sign up!</button>
     </form>
-  </div>
-</div>
-
 {% endblock %}

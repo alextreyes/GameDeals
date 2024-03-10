@@ -2,7 +2,7 @@
 
 from flask import Flask, request, render_template,  redirect, flash, session, g, url_for,jsonify, abort
 import requests
-from models import db,  connect_db, User, UserList, UserListGame, Like
+from models import db,  connect_db, User, UserList, UserListGame, Likes
 from forms import UserForm, LoginForm, ListForm
 from sqlalchemy.exc import IntegrityError    
 
@@ -127,7 +127,7 @@ def render_Bdeals():
     params = {
         "storeID": "1",
         "sortBy":"DealRating",
-        "pageSize":"6"
+        "pageSize":"12"
     }
     response = requests.get(url, params=params)
     if response.status_code == 200:
@@ -311,12 +311,12 @@ def add_like(list_id):
     print(liked_list)
     if list_id in liked_list:
         # Unlike the list
-        Like.query.filter_by(user_id=user.id, list_id=list_id).delete()
+        Likes.query.filter_by(user_id=user.id, list_id=list_id).delete()
         db.session.commit()
         return redirect('/lists')
     else:
         # Like the list
-        user_liked = Like(user_id=user.id, list_id=list_id)
+        user_liked = Likes(user_id=user.id, list_id=list_id)
         db.session.add(user_liked)
         db.session.commit()
         return redirect('/lists')
