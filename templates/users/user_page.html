@@ -1,0 +1,65 @@
+{% extends 'base.html' %} {% block content %}
+<div class="col-lg-6 col-md-8 col-sm-12">
+  {% for list in all_lists %} {% set game_count = list.count_games() %} {% set
+  likes_count = list.count_likes() %}
+  <div class="card mb-3">
+    <div class="card-header">
+      <h5 class="card-title">{{ list.list_name }}</h5>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="games-thumbnails">
+          {% for game in list.games %}
+          <img
+            src="{{ game.thumbnail }}"
+            alt="{{ game.name }}"
+            class="img-fluid mb-2"
+          />
+          {% endfor %}
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="lists-area">
+          <a href="/lists/{{ list.id }}" class="btn btn-primary btn-sm mb-2"
+            >View List</a
+          >
+        </div>
+        <form method="POST" action="/lists/{{ list.id}}/delete">
+          <button>delete list</button>
+        </form>
+        <div class="text-muted">
+          <span>
+            {% if likes_count is not none %} {% if likes_count >= 0 %} ❤️ {{
+            likes_count }} {% endif %} {% else %} Error retrieving likes count
+            {% endif %}
+          </span>
+          <span>🎮 {{ game_count }}</span>
+        </div>
+        {% if list.user.username != g.user.username %}
+        <form
+          method="POST"
+          action="/lists/add_like/{{ list.id }}"
+          id="list-form"
+        >
+          <button
+            class="btn btn-outline-secondary btn-sm"
+            aria-label="Like or Unlike"
+          >
+            {% if list.id in liked_list %}
+            <i>x</i> Unlike {% else %} <i class="fa fa-thumbs-up"></i> Like {%
+            endif %}
+          </button>
+        </form>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<div>
+  <form method="GET" action="/lists/new">
+    <button class="btn btn-primary btn-lg btn-block">Create list</button>
+  </form>
+</div>
+{% endblock %}

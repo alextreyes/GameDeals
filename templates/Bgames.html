@@ -1,0 +1,75 @@
+{% extends 'base.html' %} {% block title %} Best Deals {% endblock %} {% block
+  contentTitle %}
+  <h1>The Best Games</h1>
+  <h4>(with deals) </h4>
+  {% endblock%}{% block content %}
+  
+  <div class="games">
+    {% for deal in deals %}
+    <div class="card text-center text-white bg-dark mb-3" style="width: 18rem">
+      <form method="POST" action="/lists/add_game">
+        <input type="hidden" name="title" value="{{ deal.title }}" />
+        <input type="hidden" name="thumbnail" value="{{ deal.thumb }}" />
+        <input type="hidden" name="game_id" value="{{ deal.steamAppID }}" />
+        <input type="hidden" name="metacritic" value="{{ deal.metacriticScore }}" />
+        <input type="hidden" name="rating" value="{{ deal.steamRatingText }}" />
+        <input type="hidden" name="deal_webpage" value="https://www.cheapshark.com/redirect?dealID={{ deal.dealID }}" />
+        <a href="https://www.cheapshark.com/redirect?dealID={{ deal.dealID }}" target="_blank">
+          <img class="card-img-top" src="{{ deal.thumb }}" alt="{{ deal.title }}" />
+        </a>
+        <div class="card-body">
+          <h5 class="card-title">{{ deal.title }}</h5>
+          <p class="card-text">
+            Metacritic score {{ deal.metacriticScore}} -
+Deal Rating {{ deal.dealRating }} - Price: {{ deal.salePrice }}
+          </p>
+          {% if user.lists %}
+            <button
+              class="add-to-list-btn"
+              data-deal-id="{{ deal.title }}"
+              type="button"
+            >
+              Add to List
+            </button>
+            <div
+              class="list-dropdown"
+              id="dropdown-{{ deal.title }}"
+              style="display: none"
+            >
+              <select name="list_id">
+                {% for user_list in user.lists %}
+                <option value="{{ user_list.id }}">
+                  {{ user_list.list_name }}
+                </option>
+                {% endfor %}
+              </select>
+              <button type="submit">Confirm</button>
+            </div>
+            {% endif %}
+        </div>
+  
+      </form>
+      {% if user is none %}
+      <div class="user-log" >
+        <form method="GET" action="/signup">
+          <button class="btn btn-primary">Sign Up</button>
+        </form>
+        <span>or</span>
+        <form method="GET" action="/login">
+          <button class="btn btn-primary">login</button>
+          <span>To add!</span>
+        </form>
+      </div>
+      {% elif user and not user.lists %}
+      <div class="user-log" >
+        <form method="GET" action="/lists/new">
+          <button class="btn btn-primary">Create list to add!</button>
+        </form>
+      </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  
+  {% endblock %}
+  

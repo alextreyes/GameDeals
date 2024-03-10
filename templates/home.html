@@ -1,0 +1,70 @@
+{% extends 'base.html'%} {% block title %} gamedeals {% endblock %} {% block
+content %}
+<header>
+  {% block navbar %} {% endblock %}
+  <h1>Welcome to GameDeals!</h1>
+</header>
+<div class="flex-container">
+  <div class="card text-center text-white bg-dark mb-3 " style="width: 18rem">
+    <img
+      class="card-img-top"
+      src="/static/images/maxresdefault.jpg"
+      alt="Card image cap"
+    />
+    <div class="card-body">
+      <h5 class="card-title">Best Game Deals!</h5>
+      <p class="card-text">
+        Here are the best gamedeals based in amount discounted and original
+        price!
+      </p>
+      <a href="/Bdeals" class="btn btn-primary">Check gamedeals! </a>
+    </div>
+  </div>
+
+  <div class="card text-center text-white bg-dark mb-3" style="width: 18rem">
+    <img
+      class="card-img-top"
+      src="/static/images/OIP.jpeg"
+      alt="Card image cap"
+    />
+    <div class="card-body">
+      <h5 class="card-title">Best Games with Deals!</h5>
+      <p class="card-text">
+        Here are the best games based in metacritic scores and steam
+        reviews,with deals in the last 24 hours!
+      </p>
+      <a href="/Bgames" class="btn btn-primary">Check Best Games! </a>
+    </div>
+  </div>
+
+  <div class="card text-center text-white bg-dark mb-3" style="width: 18rem">
+    <img
+      class="card-img-top"
+      src="/static/images/The-Best-List.jpg"
+      alt="Card image cap"
+    />
+    <div class="card-body">
+      <h5 class="card-title">Community game lists</h5>
+      <p class="card-text">
+        Here you'll find the best lists of games, to start looking for lists
+        you'll need to log in or sign up!
+      </p>
+      <a href="/lists" class="btn btn-primary">Check Lists!</a>
+    </div>
+  </div>
+</div>
+<div class="user-log">
+{% if g.user is none %}
+<div>
+  <a href="/signup" class="btn btn-primary">Sign up</a>
+</div>
+<div>
+  <a href="/login" class="btn btn-primary">Login</a>
+</div>
+{% endif %} {% if g.user is not none %}
+<div>
+  <a href="/logout" class="btn btn-primary">Logout!</a>
+</div>
+{% endif %}
+</div>
+{% endblock %}

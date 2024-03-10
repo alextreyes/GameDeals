@@ -1,0 +1,20 @@
+﻿1. What goal will your website be designed to achieve? 
+Give users information about discounts and deals for games, from several online game stores
+2. What kind of users will visit your site? In other words, what is the demographic of your users?
+Users that enjoy playing video games, and that would like to know if their next game is available for less
+3. What data do you plan on using? You may have not picked your actual API yet, which is fine, just outline what kind of data you would like it to contain. 
+I plan on using the CheapShark API, and RAWG database API, I would like it to have images, and descriptions from RAWG API, and available discounts from CheapShark API
+4. In brief, outline your approach to creating your project (knowing that you may not know everything in advance and that these details might change later). 
+I would start by making a base webpage, and an empty database, then figure out the best way to handle the RAWG API, I would then start with the homepage, this page would display  games with their deals taken from the cheapshark api, and images from RAWG API, these games would have their own page, and on that page there's going to be information about the game, its description, and available deals, after making the webpage,  users could register, and could save games, based on the category of those games, the deals from the homepage would change
+a. What does your database schema look like?
+There's going to be an user Model, a game model, maybe a tag model, and a gamelist model
+b. What kinds of issues might you run into with your API? 
+         Working the RAWG api could be more difficult than I thought, mainly issues with databases, and working with two different ones, and getting the page to display the images and descriptions of the games, getting all the discounts up to date, and displaying the deals based on the user list
+c. Is there any sensitive information you need to secure? 
+        The users login credentials, and the API keys
+d. What functionality will your app include? 
+         Create lists of games, Search games by title or category, find games based on saved list of games 
+e. What will the user flow look like? 
+        the user would go to the homepage, then if they see a discount available for a game they like, just click the image and then go to the game page, where they can go to the link of the online store, and get more information about the game. If they don't find any game interesting , but still want to find a deal for a game they want to buy, they could use the search to find if the game they are looking for as any discount 
+f. What features make your site more than CRUD? Do you have any stretch goals?
+        the ability to search games from the homepage, and have a different homepage based on the saved game list of the user, once they log in.

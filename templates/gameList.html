@@ -1,0 +1,37 @@
+{% extends 'base.html' %} {% block title %} {{ list.list_name }} {% endblock %}
+{% block contentTitle %} {% endblock%} {% block content %}
+<h1>{{ list.list_name }}</h1>
+
+{% set game_count = list.count_games() %} {% set likes_count =
+list.count_likes() %}
+<div class="card">
+  <div class="card-body">
+    <div class="row">
+      <div class="games-thumbnails">{% for game in list.games %}</div>
+      <div class="game-in-list">
+        <form method="POST" action="/lists/{{ list.id }}/remove_game">
+          <input type="hidden" name="game_id" value="{{ game.game_id }}" />
+          <div class="clickable" onclick="redirectToPage('{{ game.webpage }}')">
+            <img src="{{ game.thumbnail }}" alt="{{ game.name }}" />
+            {{ game.name }} - {{ game.metacritic}} - {{ game.rating }}
+          </div>
+          <button type="submit">remove from List</button>
+        </form>
+        {% endfor %}
+      </div>
+      {% if list.user.username != g.user.username %}
+      <form method="POST" action="/lists/add_like/{{ list.id }}" id="list-form">
+        <button
+          class="btn btn-outline-secondary btn-sm"
+          aria-label="Like or Unlike"
+        >
+          {% if list.id in liked_list %}
+          <i>x</i> Unlike {% else %} <i class="fa fa-thumbs-up"></i> Like {%
+          endif %}
+        </button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
