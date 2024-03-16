@@ -12,7 +12,7 @@ app = Flask(__name__)
 CURR_USER_KEY = "curr_user"
 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get['SQLALCHEMY_DATABASE_URI']
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://aycqpqhm:20GA090bm36MafGMVq1yUvrSm3SI1n4q@drona.db.elephantsql.com/aycqpqhm'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']  =  False
 app.config['SQLALCHEMY_ECHO'] =  True
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
