@@ -11,10 +11,9 @@ app = Flask(__name__)
 CURR_USER_KEY = "curr_user"
 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///gamedeals'
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']  =  False
 app.config['SQLALCHEMY_ECHO'] =  True
-app.config['SECRET_KEY'] = "chickenzarecool21837"
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 app.debug = True
 
