@@ -2,6 +2,7 @@
 
 from flask import Flask, request, render_template,  redirect, flash, session, g, url_for,jsonify, abort
 import requests
+import os
 from models import db,  connect_db, User, UserList, UserListGame, Likes
 from forms import UserForm, LoginForm, ListForm
 from sqlalchemy.exc import IntegrityError    
@@ -11,7 +12,7 @@ app = Flask(__name__)
 CURR_USER_KEY = "curr_user"
 
 
-
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get['SQLALCHEMY_DATABASE_URI']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']  =  False
 app.config['SQLALCHEMY_ECHO'] =  True
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
