@@ -30,6 +30,11 @@ list.count_likes() %}
           endif %}
         </button>
       </form>
+      {% else %}
+        <form method="POST" action="/lists/{{ list.id}}/delete">
+          <button>delete list</button>
+        </form>
+        
       {% endif %}
     </div>
   </div>
