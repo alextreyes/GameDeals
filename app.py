@@ -2,6 +2,7 @@
 
 from flask import Flask, request, render_template,  redirect, flash, session, g, url_for,jsonify, abort
 import requests
+import os
 from models import db,  connect_db, User, UserList, UserListGame, Likes
 from forms import UserForm, LoginForm, ListForm
 from sqlalchemy.exc import IntegrityError    
@@ -11,10 +12,13 @@ app = Flask(__name__)
 CURR_USER_KEY = "curr_user"
 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///gamedeals'
+
+
+app.config["SECRET_KEY"] = os.environ.get('SECRET_KEY')
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get('DATABASE_URL')
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']  =  False
 app.config['SQLALCHEMY_ECHO'] =  True
-app.config['SECRET_KEY'] = "chickenzarecool21837"
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 app.debug = True
 
