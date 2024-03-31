@@ -1,42 +1,37 @@
 {% extends 'base.html' %} {% block title %} {{ list.list_name }} {% endblock %}
-{% block contentTitle %} {% endblock%} {% block content %}
+{% block contentTitle %} {% endblock %} {% block content %}
 <h1>{{ list.list_name }}</h1>
 
 {% set game_count = list.count_games() %} {% set likes_count =
 list.count_likes() %}
-<div class="card">
-  <div class="card-body">
-    <div class="row">
-      <div class="games-thumbnails">{% for game in list.games %}</div>
-      <div class="game-in-list">
+
+<div class="row">
+  {% for game in list.games %}
+  <div class="col-md-4 mb-4">
+    <div class="card h-100">
+      <img
+        src="{{ game.thumbnail }}"
+        class="card-img-top"
+        alt="{{ game.name }}"
+      />
+      <div class="card-body text-center">
+        <h5 class="card-title">{{ game.name }}</h5>
+        <p class="card-text">Metacritic score: {{ game.metacritic }}</p>
+        <p>Steam review: {{ game.rating }}</p>
+        <a href="{{ game.webpage }}" class="btn btn-primary">View Details</a>
+        {% if list.user.username == username %}
         <form method="POST" action="/lists/{{ list.id }}/remove_game">
           <input type="hidden" name="game_id" value="{{ game.game_id }}" />
-          <div class="clickable" onclick="redirectToPage('{{ game.webpage }}')">
-            <img src="{{ game.thumbnail }}" alt="{{ game.name }}" />
-            {{ game.name }} - {{ game.metacritic}} - {{ game.rating }}
-          </div>
-          <button type="submit">remove from List</button>
+          <button type="submit" class="btn btn-danger mt-2">
+            Remove from List
+          </button>
         </form>
-        {% endfor %}
+        {% endif %}
       </div>
-      {% if list.user.username != g.user.username %}
-      <form method="POST" action="/lists/add_like/{{ list.id }}" id="list-form">
-        <button
-          class="btn btn-outline-secondary btn-sm"
-          aria-label="Like or Unlike"
-        >
-          {% if list.id in liked_list %}
-          <i>x</i> Unlike {% else %} <i class="fa fa-thumbs-up"></i> Like {%
-          endif %}
-        </button>
-      </form>
-      {% else %}
-        <form method="POST" action="/lists/{{ list.id}}/delete">
-          <button>delete list</button>
-        </form>
-        
-      {% endif %}
     </div>
   </div>
+  {% endfor %}
 </div>
+
 {% endblock %}
+
