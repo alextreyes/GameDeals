@@ -11,8 +11,7 @@ app = Flask(__name__)
 CURR_USER_KEY = "curr_user"
 
 
-
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://aycqpqhm:20GA090bm36MafGMVq1yUvrSm3SI1n4q@drona.db.elephantsql.com/aycqpqhm'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///gamedeals'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']  =  False
 app.config['SQLALCHEMY_ECHO'] =  True
 app.config['SECRET_KEY'] = "chickenzarecool21837"
@@ -175,7 +174,7 @@ def show_lists():
             
             return render_template('lists.html', liked_list=liked_list, all_lists=all_lists, user=user)
         
-        return render_template('lists.html', all_lists=all_lists)
+        return render_template('lists.html', liked_list=liked_list, all_lists=all_lists)
     else:
         flash("Log in or Sign up to access best lists!")
         return render_template('home.html') 
@@ -220,7 +219,7 @@ def delete_list(list_id):
 
 @app.route("/lists/<int:list_id>", methods=["GET"])
 def show_list(list_id):
-    """Shows specific list with games"""
+    """shows specific list with games"""
     # Fetch the list object by its ID
     user_list = UserList.query.filter_by(id=list_id).first()
 
@@ -228,19 +227,11 @@ def show_list(list_id):
     if user_list:
         # Assuming you have a relationship between UserList and games, you can access the associated games like this:
         games = user_list.games
-
-        # Assuming g.user is properly set, get the username
-        if hasattr(g, 'user') and hasattr(g.user, 'username'):
-            username = g.user.username
-        else:
-            username = None
-
-        return render_template("gameList.html", list=user_list, games=games, username=username)
+        return render_template("gameList.html", list=user_list, games=games)
     else:
         # Handle the case where the list with the given ID doesn't exist
         flash("List not found", "error")
-        return redirect('/lists')  # Or render an error template, depending on your preference
-
+        return redirect('/lists') 
 
 @app.route('/lists/add_game', methods=['POST'])
 def add_game_to_list():
